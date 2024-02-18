@@ -1,0 +1,13 @@
+{
+  "lock": false,
+  "tasks": {
+    "check:types": "deno check **/*.ts",
+    "coverage": "rm -rf coverage && deno task test --coverage && deno coverage --html",
+    "dev": "deno run -A --unstable-kv todo.ts",
+    "install": "deno install --allow-net=cdn.deno.land,api.github.com --allow-run --unstable-kv todo.ts -f",
+    "ok": "deno fmt --check && deno lint && deno task check:types && deno task test",
+    "test": "deno test -A --unstable-kv --parallel --no-check",
+    "version:increase": "deno run --unstable-kv --allow-read=src/versions.json --allow-write=src/versions.json src/utils/increase_version.ts",
+    "version:latest": "deno run --unstable-kv --allow-read src/utils/latest_version.ts"
+  }
+}
