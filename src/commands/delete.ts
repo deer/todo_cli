@@ -1,34 +1,31 @@
-import { Command, Select } from "../deps.ts";
-import { deleteTodo, getTodos } from "../crud.ts";
+import { Checkbox, Command } from "../deps.ts";
+import { deleteTodoByName, deleteTodosByName, getTodos } from "../todoApi.ts";
 
 export default new Command()
   .description("Delete a todo")
   .option(
-    "-m, --manual [id:string]",
-    "Manually delete a todo by providing its ID",
+    "-m, --manual [name:string]",
+    "Manually delete a todo by providing its name",
   )
-  .action(async ({ manual }, id?: string) => {
-    if (manual && id) {
-      await deleteTodo(id);
-      console.log(`Todo ${id} deleted.`);
+  .action(async ({ manual }, name?: string) => {
+    if (manual && name) {
+      await deleteTodoByName(name);
+      console.log(`Todo ${name} deleted.`);
     } else {
       const todos = await getTodos();
       if (todos.length === 0) {
         console.log("No todos to delete.");
         return;
       }
-      const todoChoices = todos.map((todo) => `${todo.task} (ID: ${todo.id})`);
-      const selectedTodo = await Select.prompt({
+      const todoChoices = todos.map((todo) => `${todo.value.task}`);
+      const selectedTodos = await Checkbox.prompt({
         message: "Select a todo to delete",
         options: todoChoices,
       });
-      const match = selectedTodo.match(/\(ID: (.*)\)/);
-      if (!match || match.length < 2) {
-        console.log("Failed to extract the todo ID.");
+      if (selectedTodos.length === 0) {
+        console.log("No todos selected.");
         return;
       }
-      const selectedId = match[1];
-      await deleteTodo(selectedId);
-      console.log(`Todo ${selectedId} deleted.`);
+      await deleteTodosByName(selectedTodos);
     }
   });

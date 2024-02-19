@@ -6,6 +6,7 @@ export {
   UpgradeCommand,
 } from "https://deno.land/x/cliffy@v1.0.0-rc.3/command/mod.ts";
 export {
+  Checkbox,
   Input,
   Select,
   Toggle,
@@ -19,4 +20,10 @@ export {
 } from "jsr:@std/semver@0.216";
 export { z } from "npm:zod@3.22.4";
 export { zodModel } from "jsr:@olli/kvdex@0.34.2/ext/zod";
-export { collection, kvdex, model } from "jsr:@olli/kvdex@0.34.2";
+export {
+  collection,
+  type Document,
+  kvdex,
+  type KvId,
+  model,
+} from "jsr:@olli/kvdex@0.34.2";
