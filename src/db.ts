@@ -15,9 +15,5 @@ const kvStorePath = Deno.env.get("TODO_CLI_KV_STORE_PATH");
 const kv = await Deno.openKv(kvStorePath);
 
 export const db = kvdex(kv, {
-  todos: collection(zodModel(TodoSchema), {
-    // indices: {
-    //   task: "primary",
-    // },
-  }),
+  todos: collection(zodModel(TodoSchema)),
 });
