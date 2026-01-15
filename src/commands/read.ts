@@ -1,4 +1,4 @@
-import { Command } from "../deps.ts";
+import { Command } from "@cliffy/command";
 import { getTodoByName } from "../todoApi.ts";
 
 export default new Command()

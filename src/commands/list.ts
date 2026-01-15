@@ -1,4 +1,5 @@
-import { Command, Table } from "../deps.ts";
+import { Command } from "@cliffy/command";
+import { Table } from "@cliffy/table";
 import { getTodos } from "../todoApi.ts";
 
 export default new Command()

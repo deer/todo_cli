@@ -1,0 +1,31 @@
+{
+  "lock": false,
+  "imports": {
+    // Cliffy - CLI framework
+    "@cliffy/command": "jsr:@cliffy/command@^1.0.0-rc.8",
+    "@cliffy/prompt": "jsr:@cliffy/prompt@^1.0.0-rc.8",
+    "@cliffy/table": "jsr:@cliffy/table@^1.0.0-rc.8",
+    // Standard library
+    "@std/assert": "jsr:@std/assert@^1.0.16",
+    "@std/async": "jsr:@std/async@^1.0.16",
+    "@std/fmt": "jsr:@std/fmt@^1.0.8",
+    "@std/fs": "jsr:@std/fs@^1.0.21",
+    "@std/semver": "jsr:@std/semver@^1.0.7",
+    // KV database
+    "@olli/kvdex": "jsr:@olli/kvdex@^3.4.2",
+    "@olli/kvdex/ext/zod": "jsr:@olli/kvdex@^3.4.2/ext/zod",
+    // Testing utilities
+    "@david/dax": "jsr:@david/dax@^0.44.2",
+    // Validation
+    "zod": "npm:zod@^3.25.76"
+  },
+  "tasks": {
+    "coverage": "rm -rf coverage && deno task test --coverage && deno coverage --html",
+    "dev": "deno run -A --unstable-kv --unstable-temporal todo.ts",
+    "install": "deno install --allow-net=cdn.deno.land,api.github.com --allow-env=TODO_CLI_KV_STORE_PATH --allow-run --unstable-kv --unstable-temporal todo.ts -f",
+    "ok": "deno fmt --check && deno lint && deno check && deno task test",
+    "test": "deno test -A --unstable-kv --unstable-temporal --parallel --no-check",
+    "version:increase": "deno run --allow-read=src/versions.json --allow-write=src/versions.json src/utils/increase_version.ts",
+    "version:latest": "deno run --allow-read src/utils/latest_version.ts"
+  }
+}

@@ -1,4 +1,5 @@
-import { Checkbox, Command, Input, Select, Toggle } from "../deps.ts";
+import { Command } from "@cliffy/command";
+import { Checkbox, Input, Select, Toggle } from "@cliffy/prompt";
 import {
   completeTodoByName,
   getTodoDocByName,

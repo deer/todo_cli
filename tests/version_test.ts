@@ -1,9 +1,11 @@
+import { assertEquals } from "@std/assert";
+import { increment, parse } from "@std/semver";
+import $ from "@david/dax";
 import {
   decreaseVersion,
   getLatestVersionLocal,
   increaseVersion,
 } from "../src/version.ts";
-import { $, assertEquals, increment, parse } from "./test_deps.ts";
 
 Deno.test("increase version task test", async () => {
   const latestVersion = await $`deno task version:latest`.text();
