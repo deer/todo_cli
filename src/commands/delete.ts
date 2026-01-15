@@ -1,4 +1,5 @@
-import { Checkbox, Command } from "../deps.ts";
+import { Command } from "@cliffy/command";
+import { Checkbox } from "@cliffy/prompt";
 import { deleteTodosByName, getTodos } from "../todoApi.ts";
 
 export default new Command()

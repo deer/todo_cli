@@ -1,4 +1,4 @@
-import { format, increment, parse, ReleaseType } from "./deps.ts";
+import { format, increment, parse, type ReleaseType } from "@std/semver";
 import VERSIONS from "./versions.json" with { type: "json" };
 
 type Versions = {

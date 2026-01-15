@@ -1,4 +1,5 @@
-import { Command, Input } from "../deps.ts";
+import { Command } from "@cliffy/command";
+import { Input } from "@cliffy/prompt";
 import { addTodo } from "../todoApi.ts";
 
 export default new Command()

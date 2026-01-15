@@ -1,5 +1,5 @@
+import type { Document } from "@olli/kvdex";
 import { db, Todo, TodoSchema } from "./db.ts";
-import { Document, KvId } from "./deps.ts";
 
 export async function addTodo(task: string): Promise<void> {
   const newTodo = {
@@ -12,13 +12,13 @@ export async function addTodo(task: string): Promise<void> {
   await db.todos.add(validatedTodo);
 }
 
-export async function getTodos(): Promise<Document<Todo>[]> {
+export async function getTodos(): Promise<Document<Todo, string>[]> {
   const todos = await db.todos.getMany();
   return todos.result;
 }
 
 export async function modifyTodo(
-  id: KvId,
+  id: string,
   task: string,
   completed: boolean,
 ): Promise<void> {

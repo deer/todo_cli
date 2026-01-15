@@ -1,4 +1,5 @@
-import { collection, kvdex, z, zodModel } from "./deps.ts";
+import { collection, kvdex } from "@olli/kvdex";
+import { z } from "zod";
 
 export const TodoSchema = z.object({
   id: z.string(),
@@ -14,6 +15,9 @@ export type Todo = z.infer<typeof TodoSchema>;
 const kvStorePath = Deno.env.get("TODO_CLI_KV_STORE_PATH");
 const kv = await Deno.openKv(kvStorePath);
 
-export const db = kvdex(kv, {
-  todos: collection(zodModel(TodoSchema)),
+export const db = kvdex({
+  kv,
+  schema: {
+    todos: collection(TodoSchema),
+  },
 });

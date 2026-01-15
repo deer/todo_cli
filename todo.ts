@@ -1,15 +1,13 @@
+import { Command } from "@cliffy/command";
+import { CompletionsCommand } from "@cliffy/command/completions";
+import { UpgradeCommand } from "@cliffy/command/upgrade";
+import { DenoLandProvider } from "@cliffy/command/upgrade/provider/deno-land";
+import { GithubProvider } from "@cliffy/command/upgrade/provider/github";
 import addCommand from "./src/commands/add.ts";
 import deleteCommand from "./src/commands/delete.ts";
 import listCommand from "./src/commands/list.ts";
 import readCommand from "./src/commands/read.ts";
 import updateCommand from "./src/commands/update.ts";
-import {
-  Command,
-  CompletionsCommand,
-  DenoLandProvider,
-  GithubProvider,
-  UpgradeCommand,
-} from "./src/deps.ts";
 import { getLatestVersion } from "./src/version.ts";
 
 await new Command()
