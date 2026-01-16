@@ -65,3 +65,19 @@ Deno.test("list command - long format includes dates", async () => {
     await cleanupCliTestEnv(tmpDir);
   }
 });
+
+Deno.test("list command - long format shows N/A for missing dates", async () => {
+  const { tmpDir, dbPath } = await setupCliTestEnv();
+  try {
+    await addTodoCli("Incomplete task", dbPath);
+
+    const output = await runTodoCli(["list", "--long"], dbPath);
+    const cleaned = stripAnsiCode(output);
+    assertStringIncludes(cleaned, "Incomplete task");
+    assertStringIncludes(cleaned, "No");
+    // Should have N/A for completed at
+    assertStringIncludes(cleaned, "N/A");
+  } finally {
+    await cleanupCliTestEnv(tmpDir);
+  }
+});

@@ -250,3 +250,16 @@ Deno.test("todoApi - todos have unique IDs", async () => {
     await cleanupApiTestEnv(tmpDir, close);
   }
 });
+
+Deno.test("todoApi - getTodoDocByName throws error for non-existent todo", async () => {
+  const { tmpDir, db, close } = await setupApiTestEnv();
+  try {
+    await assertRejects(
+      async () => await getTodoDocByName("Does not exist", db),
+      Error,
+      'Todo with task "Does not exist" not found.',
+    );
+  } finally {
+    await cleanupApiTestEnv(tmpDir, close);
+  }
+});
