@@ -12,11 +12,10 @@ export default new Command()
 
 async function deleteAction(
   { manual }: { manual?: string | true | undefined },
-  name?: string,
 ) {
-  if (manual && name) {
-    await deleteTodosByName([name]);
-    console.log(`Todo '${name}' deleted.`);
+  if (manual && typeof manual === "string") {
+    await deleteTodosByName([manual]);
+    console.log(`Todo '${manual}' deleted.`);
   } else {
     const todos = await getTodos();
     if (todos.length === 0) {

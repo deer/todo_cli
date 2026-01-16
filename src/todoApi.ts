@@ -1,10 +1,11 @@
 import type { Document } from "@olli/kvdex";
-import { db, Todo, TodoSchema } from "./db.ts";
+import { createDb, db, type Todo, type TodoDb, TodoSchema } from "./db.ts";
 
 /**
  * Adds a new todo to the database.
  *
  * @param task - The task description for the todo
+ * @param database - Optional database instance. If not provided, uses the default database
  * @returns A promise that resolves when the todo is added
  *
  * @example
@@ -12,7 +13,11 @@ import { db, Todo, TodoSchema } from "./db.ts";
  * await addTodo("Buy groceries");
  * ```
  */
-export async function addTodo(task: string): Promise<void> {
+export async function addTodo(
+  task: string,
+  database?: TodoDb,
+): Promise<void> {
+  const targetDb = database ?? db;
   const newTodo = {
     id: crypto.randomUUID(),
     task,
@@ -20,12 +25,13 @@ export async function addTodo(task: string): Promise<void> {
     completed: false,
   };
   const validatedTodo = TodoSchema.parse(newTodo);
-  await db.todos.add(validatedTodo);
+  await targetDb.todos.add(validatedTodo);
 }
 
 /**
  * Retrieves all todos from the database.
  *
+ * @param database - Optional database instance. If not provided, uses the default database
  * @returns A promise that resolves to an array of todo documents
  *
  * @example
@@ -34,8 +40,11 @@ export async function addTodo(task: string): Promise<void> {
  * console.log(`You have ${todos.length} todos`);
  * ```
  */
-export async function getTodos(): Promise<Document<Todo, string>[]> {
-  const todos = await db.todos.getMany();
+export async function getTodos(
+  database?: TodoDb,
+): Promise<Document<Todo, string>[]> {
+  const targetDb = database ?? db;
+  const todos = await targetDb.todos.getMany();
   return todos.result;
 }
 
@@ -45,6 +54,7 @@ export async function getTodos(): Promise<Document<Todo, string>[]> {
  * @param id - The unique identifier of the todo to update
  * @param task - The new task description
  * @param completed - Whether the todo is completed
+ * @param database - Optional database instance. If not provided, uses the default database
  * @throws {Error} If the todo with the given ID is not found
  *
  * @example
@@ -56,7 +66,9 @@ export async function modifyTodo(
   id: string,
   task: string,
   completed: boolean,
+  database?: TodoDb,
 ): Promise<void> {
+  const targetDb = database ?? db;
   const todoUpdate: Partial<Todo> = {
     task,
     completed,
@@ -67,7 +79,9 @@ export async function modifyTodo(
   } else {
     todoUpdate.completedAt = undefined;
   }
-  const result = await db.todos.update(id, todoUpdate, { strategy: "merge" });
+  const result = await targetDb.todos.update(id, todoUpdate, {
+    strategy: "merge",
+  });
   if (!result.ok) {
     throw new Error(`Failed to update todo with ID ${id}`);
   }
@@ -77,14 +91,19 @@ export async function modifyTodo(
  * Deletes todos by their task names.
  *
  * @param tasks - An array of task names to delete
+ * @param database - Optional database instance. If not provided, uses the default database
  *
  * @example
  * ```ts
  * await deleteTodosByName(["Buy groceries", "Walk the dog"]);
  * ```
  */
-export async function deleteTodosByName(tasks: string[]) {
-  await db.todos.deleteMany({
+export async function deleteTodosByName(
+  tasks: string[],
+  database?: TodoDb,
+): Promise<void> {
+  const targetDb = database ?? db;
+  await targetDb.todos.deleteMany({
     filter: (todo) => tasks.includes(todo.value.task),
   });
 }
@@ -93,6 +112,7 @@ export async function deleteTodosByName(tasks: string[]) {
  * Retrieves a single todo by its task name.
  *
  * @param task - The task name to search for
+ * @param database - Optional database instance. If not provided, uses the default database
  * @returns A promise that resolves to the todo
  * @throws {Error} If no todo with the given task name is found
  *
@@ -102,8 +122,12 @@ export async function deleteTodosByName(tasks: string[]) {
  * console.log(todo.completed);
  * ```
  */
-export async function getTodoByName(task: string): Promise<Todo> {
-  const todo = await db.todos.getOne({
+export async function getTodoByName(
+  task: string,
+  database?: TodoDb,
+): Promise<Todo> {
+  const targetDb = database ?? db;
+  const todo = await targetDb.todos.getOne({
     filter: (todo) => todo.value.task === task,
   });
   if (todo?.value) {
@@ -116,19 +140,24 @@ export async function getTodoByName(task: string): Promise<Todo> {
  * Marks a todo as completed by its task name.
  *
  * @param name - The task name to mark as completed
+ * @param database - Optional database instance. If not provided, uses the default database
  *
  * @example
  * ```ts
  * await completeTodoByName("Buy groceries");
  * ```
  */
-export async function completeTodoByName(name: string) {
+export async function completeTodoByName(
+  name: string,
+  database?: TodoDb,
+): Promise<void> {
+  const targetDb = database ?? db;
   const todoUpdate: Partial<Todo> = {
     completed: true,
     updatedAt: Temporal.Now.instant().toString(),
     completedAt: Temporal.Now.instant().toString(),
   };
-  await db.todos.updateMany(todoUpdate, {
+  await targetDb.todos.updateMany(todoUpdate, {
     filter: (todo) => todo.value.task === name,
     strategy: "merge",
   });
@@ -139,6 +168,7 @@ export async function completeTodoByName(name: string) {
  * Returns the full document including metadata.
  *
  * @param task - The task name to search for
+ * @param database - Optional database instance. If not provided, uses the default database
  * @returns A promise that resolves to the todo document
  * @throws {Error} If no todo with the given task name is found
  *
@@ -148,8 +178,12 @@ export async function completeTodoByName(name: string) {
  * console.log(todoDoc.id, todoDoc.value);
  * ```
  */
-export async function getTodoDocByName(task: string) {
-  const todo = await db.todos.getOne({
+export async function getTodoDocByName(
+  task: string,
+  database?: TodoDb,
+): Promise<Document<Todo, string>> {
+  const targetDb = database ?? db;
+  const todo = await targetDb.todos.getOne({
     filter: (todo) => todo.value.task === task,
   });
   if (todo?.value) {
@@ -157,3 +191,6 @@ export async function getTodoDocByName(task: string) {
   }
   throw new Error(`Todo with task "${task}" not found.`);
 }
+
+// Re-export createDb for convenience in tests
+export { createDb };
