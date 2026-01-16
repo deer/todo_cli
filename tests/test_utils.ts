@@ -80,36 +80,8 @@ export async function runTodoCli(
     noThrow?: boolean;
   },
 ): Promise<string> {
-  // Build command by spreading args
-  let cmd;
-  switch (args.length) {
-    case 0:
-      cmd = $`deno run -A --unstable-kv --unstable-temporal todo.ts`;
-      break;
-    case 1:
-      cmd = $`deno run -A --unstable-kv --unstable-temporal todo.ts ${args[0]}`;
-      break;
-    case 2:
-      cmd = $`deno run -A --unstable-kv --unstable-temporal todo.ts ${
-        args[0]
-      } ${args[1]}`;
-      break;
-    case 3:
-      cmd = $`deno run -A --unstable-kv --unstable-temporal todo.ts ${
-        args[0]
-      } ${args[1]} ${args[2]}`;
-      break;
-    case 4:
-      cmd = $`deno run -A --unstable-kv --unstable-temporal todo.ts ${
-        args[0]
-      } ${args[1]} ${args[2]} ${args[3]}`;
-      break;
-    default:
-      // For more args, concatenate them
-      cmd = $`deno run -A --unstable-kv --unstable-temporal todo.ts ${
-        args.join(" ")
-      }`;
-  }
+  // Build command with proper escaping using array spread
+  let cmd = $`deno run -A --unstable-kv --unstable-temporal todo.ts ${args}`;
 
   cmd = cmd.env("TODO_CLI_KV_STORE_PATH", dbPath)
     .captureCombined();

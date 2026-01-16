@@ -36,7 +36,7 @@ Deno.test("delete command - handles empty todo list", async () => {
   try {
     const output = await runTodoCli(["delete"], dbPath, { stdinText: "\n" });
     const cleaned = stripAnsiCode(output);
-    assertStringIncludes(cleaned, "No todos");
+    assertStringIncludes(cleaned, "No todos to delete");
   } finally {
     await cleanupCliTestEnv(tmpDir);
   }

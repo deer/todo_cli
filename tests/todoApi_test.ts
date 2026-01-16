@@ -1,4 +1,4 @@
-import { assertEquals, assertRejects } from "@std/assert";
+import { assertEquals, assertNotEquals, assertRejects } from "@std/assert";
 import {
   addTodo,
   completeTodoByName,
@@ -243,7 +243,7 @@ Deno.test("todoApi - todos have unique IDs", async () => {
 
     const todos = await getTodos(db);
     const ids = todos.map((t) => t.value.id);
-    assertEquals(ids[0] !== ids[1], true);
+    assertNotEquals(ids[0], ids[1]);
     assertEquals(typeof ids[0], "string");
     assertEquals(typeof ids[1], "string");
   } finally {

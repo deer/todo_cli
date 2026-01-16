@@ -101,7 +101,7 @@ export async function modifyTodo(
 export async function deleteTodosByName(
   tasks: string[],
   database?: TodoDb,
-) {
+): Promise<void> {
   const targetDb = database ?? db;
   await targetDb.todos.deleteMany({
     filter: (todo) => tasks.includes(todo.value.task),
@@ -150,7 +150,7 @@ export async function getTodoByName(
 export async function completeTodoByName(
   name: string,
   database?: TodoDb,
-) {
+): Promise<void> {
   const targetDb = database ?? db;
   const todoUpdate: Partial<Todo> = {
     completed: true,
@@ -181,7 +181,7 @@ export async function completeTodoByName(
 export async function getTodoDocByName(
   task: string,
   database?: TodoDb,
-) {
+): Promise<Document<Todo, string>> {
   const targetDb = database ?? db;
   const todo = await targetDb.todos.getOne({
     filter: (todo) => todo.value.task === task,

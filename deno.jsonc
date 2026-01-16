@@ -16,13 +16,12 @@
     "@olli/kvdex/ext/zod": "jsr:@olli/kvdex@^3.4.2/ext/zod",
     // Testing utilities
     "@david/dax": "jsr:@david/dax@^0.44.2",
-    "@std/testing": "jsr:@std/testing@^1.0.16",
     // Validation
     "zod": "npm:zod@^3.25.76"
   },
   "tasks": {
-    "coverage": "deno task test --coverage=coverage && deno coverage coverage --html",
-    "coverage:lcov": "deno task test --coverage=coverage && deno coverage coverage --lcov --output=coverage.lcov",
+    "coverage": "rm -rf coverage && deno task test --coverage=coverage && deno coverage coverage --html",
+    "coverage:lcov": "rm -rf coverage && deno task test --coverage=coverage && deno coverage coverage --lcov --output=coverage.lcov",
     "dev": "deno run -A --unstable-kv --unstable-temporal todo.ts",
     "install": "deno install --allow-net=cdn.deno.land,api.github.com --allow-env=TODO_CLI_KV_STORE_PATH --allow-run --unstable-kv --unstable-temporal todo.ts -f",
     "ok": "deno fmt --check && deno lint && deno check && deno task test",

@@ -27,12 +27,13 @@ Deno.test("read command - fails for non-existent todo", async () => {
     const output = await runTodoCli(["read", "Non-existent"], dbPath);
     const cleaned = stripAnsiCode(output);
     assertStringIncludes(cleaned, "not found");
+    assertStringIncludes(cleaned, "Non-existent");
   } finally {
     await cleanupCliTestEnv(tmpDir);
   }
 });
 
-Deno.test("read command - shows completed status", async () => {
+Deno.test("read command - shows completed field for incomplete todo", async () => {
   const { tmpDir, dbPath } = await setupCliTestEnv();
   try {
     await addTodoCli("Completed task", dbPath);
