@@ -5,22 +5,25 @@
 This is a Deno-based CLI application for managing todos using Deno KV as the
 storage backend. The project uses TypeScript and modern Deno features.
 
-## Development Environment Setup
+> **Note**: The environment is automatically configured via
+> `.github/workflows/copilot-setup-steps.yml`. This file provides additional
+> context and best practices.
 
-### Prerequisites
+## Development Environment
 
-- **Deno 2.x or later** is required
-- No npm or Node.js - this is a pure Deno project
+### Environment Setup (Automated)
 
-### Initial Setup
+The `.github/workflows/copilot-setup-steps.yml` workflow automatically:
 
-1. Install Deno if not already installed:
-   ```bash
-   curl -fsSL https://deno.land/x/install/install.sh | sh
-   ```
+- Installs Deno 2.x
+- Caches dependencies
+- Verifies the environment is ready
 
-2. All dependencies are managed in `deno.jsonc` - no separate install step
-   needed
+### Key Points
+
+- **Deno 2.x or later** is required (automatically installed)
+- **No npm or Node.js** - this is a pure Deno project
+- All dependencies are managed in `deno.jsonc` - no separate install step needed
 
 ### Running the Application
 
