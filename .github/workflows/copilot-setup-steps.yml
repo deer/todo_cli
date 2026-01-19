@@ -1,0 +1,64 @@
+name: "Copilot Setup Steps"
+
+# Automatically run the setup steps when they are changed to allow for easy validation, and
+# allow manual testing through the repository's "Actions" tab
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+  # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+
+    # Set the permissions to the lowest permissions possible needed for your steps.
+    # Copilot will be given its own token for its operations.
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Verify Deno installation
+        run: deno --version
+
+      - name: Cache Deno dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/deno
+            ~/.deno
+          key: ${{ runner.os }}-deno-${{ hashFiles('**/deno.jsonc', '**/deno.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-deno-
+
+      - name: Check Deno configuration
+        run: |
+          echo "Deno configuration loaded from deno.jsonc"
+          deno task --help || echo "Tasks available in deno.jsonc"
+
+      - name: Install dependencies (pre-cache)
+        run: |
+          # This will download and cache all dependencies
+          deno cache todo.ts
+          deno cache src/todoApi.ts
+
+      - name: Run code quality checks
+        run: |
+          deno fmt --check
+          deno lint
+          deno check
+
+      - name: Run tests
+        run: deno task test
