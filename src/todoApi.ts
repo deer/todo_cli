@@ -36,22 +36,21 @@ export async function addTodo(
 ): Promise<void> {
   const targetDb = options?.database ?? db;
 
-  const newTodo = {
+  const newTodo: Record<string, unknown> = {
     id: crypto.randomUUID(),
     task,
     createdAt: Temporal.Now.instant().toString(),
     completed: false,
-    ...(options?.assignedTo !== undefined &&
-      { assignedTo: options.assignedTo }),
-    ...(options?.priority !== undefined && { priority: options.priority }),
-    ...(options?.estimatedMinutes !== undefined &&
-      { estimatedMinutes: options.estimatedMinutes }),
-    ...(options?.actualMinutes !== undefined &&
-      { actualMinutes: options.actualMinutes }),
-    ...(options?.parentTaskId !== undefined &&
-      { parentTaskId: options.parentTaskId }),
-    ...(options?.tags !== undefined && { tags: options.tags }),
   };
+  
+  // Add optional metadata fields if provided
+  if (options?.assignedTo !== undefined) newTodo.assignedTo = options.assignedTo;
+  if (options?.priority !== undefined) newTodo.priority = options.priority;
+  if (options?.estimatedMinutes !== undefined) newTodo.estimatedMinutes = options.estimatedMinutes;
+  if (options?.actualMinutes !== undefined) newTodo.actualMinutes = options.actualMinutes;
+  if (options?.parentTaskId !== undefined) newTodo.parentTaskId = options.parentTaskId;
+  if (options?.tags !== undefined) newTodo.tags = options.tags;
+  
   const validatedTodo = TodoSchema.parse(newTodo);
   await targetDb.todos.add(validatedTodo);
 }
