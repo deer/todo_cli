@@ -25,16 +25,66 @@ export const TodoSchema = z.object({
  */
 export type Todo = z.infer<typeof TodoSchema>;
 
-const kvStorePath = Deno.env.get("TODO_CLI_KV_STORE_PATH");
-const kv = await Deno.openKv(kvStorePath);
+/**
+ * Database schema definition
+ */
+const dbSchema = {
+  todos: collection(TodoSchema),
+};
 
 /**
- * Database instance using kvdex for type-safe KV operations.
- * Contains a single collection: `todos`
+ * Type definition for the database instance
  */
-export const db = kvdex({
-  kv,
-  schema: {
-    todos: collection(TodoSchema),
-  },
-});
+export type TodoDb = ReturnType<typeof createDbInstance>;
+
+function createDbInstance(kv: Deno.Kv) {
+  return kvdex({
+    kv,
+    schema: dbSchema,
+  });
+}
+
+let cachedDb: TodoDb | null = null;
+
+/**
+ * Creates a new database instance with the given KV store path.
+ *
+ * @param kvStorePath - Optional path to the KV store. If not provided, uses TODO_CLI_KV_STORE_PATH env variable
+ * @returns An object with the database instance and a close method
+ */
+export async function createDb(kvStorePath?: string): Promise<{
+  db: TodoDb;
+  kv: Deno.Kv;
+  close: () => void;
+}> {
+  const path = kvStorePath ?? Deno.env.get("TODO_CLI_KV_STORE_PATH");
+  const kv = await Deno.openKv(path);
+  const db = createDbInstance(kv);
+  return {
+    db,
+    kv,
+    close: () => kv.close(),
+  };
+}
+
+/**
+ * Gets the shared database instance, creating it if necessary.
+ * Uses the TODO_CLI_KV_STORE_PATH environment variable for the path.
+ *
+ * @returns The shared database instance
+ */
+export async function getDb(): Promise<TodoDb> {
+  if (!cachedDb) {
+    const { db } = await createDb();
+    cachedDb = db;
+  }
+  return cachedDb;
+}
+
+/**
+ * Default database instance using kvdex for type-safe KV operations.
+ * Contains a single collection: `todos`
+ *
+ * @deprecated Use getDb() instead for better testability
+ */
+export const db = await getDb();

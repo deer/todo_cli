@@ -62,6 +62,6 @@ async function updateAction(
       active: "yes",
     });
 
-    modifyTodo(selectedTodoItem.id, newTask, newCompleted === true);
+    await modifyTodo(selectedTodoItem.id, newTask, newCompleted === true);
   }
 }
