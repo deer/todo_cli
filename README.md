@@ -28,7 +28,7 @@ deno task install
 Or manually:
 
 ```bash
-deno install --allow-net=cdn.deno.land,api.github.com --allow-env=TODO_CLI_KV_STORE_PATH --allow-run --unstable-kv --unstable-temporal todo.ts -f
+deno install -g --allow-net=cdn.deno.land,api.github.com --allow-env=TODO_CLI_KV_STORE_PATH --allow-run --unstable-kv --unstable-temporal --config deno.jsonc todo.ts -f
 ```
 
 ## Usage
@@ -48,10 +48,6 @@ todo add "Buy groceries"
 ```bash
 # List all todos
 todo list
-
-# List with filters
-todo list --completed     # Show only completed
-todo list --incomplete    # Show only incomplete
 ```
 
 ### Read a Todo
