@@ -20,11 +20,27 @@ import type { TodoDb } from "../db.ts";
  * Handler for todo_add tool
  */
 export async function handleTodoAdd(
-  args: { task: string },
+  args: {
+    task: string;
+    assignedTo?: string;
+    priority?: "high" | "medium" | "low";
+    estimatedMinutes?: number;
+    actualMinutes?: number;
+    parentTaskId?: string;
+    tags?: string[];
+  },
   db?: TodoDb,
 ): Promise<{ success: boolean; message: string }> {
   try {
-    await addTodo(args.task, { database: db });
+    await addTodo(args.task, {
+      assignedTo: args.assignedTo,
+      priority: args.priority,
+      estimatedMinutes: args.estimatedMinutes,
+      actualMinutes: args.actualMinutes,
+      parentTaskId: args.parentTaskId,
+      tags: args.tags,
+      database: db,
+    });
     return {
       success: true,
       message: `Todo added: "${args.task}"`,
@@ -114,6 +130,12 @@ export async function handleTodoGet(
     createdAt?: string;
     updatedAt?: string;
     completedAt?: string;
+    assignedTo?: string;
+    priority?: "high" | "medium" | "low";
+    estimatedMinutes?: number;
+    actualMinutes?: number;
+    parentTaskId?: string;
+    tags?: string[];
   };
   message?: string;
 }> {
@@ -128,6 +150,12 @@ export async function handleTodoGet(
         createdAt: todo.createdAt,
         updatedAt: todo.updatedAt,
         completedAt: todo.completedAt,
+        assignedTo: todo.assignedTo,
+        priority: todo.priority,
+        estimatedMinutes: todo.estimatedMinutes,
+        actualMinutes: todo.actualMinutes,
+        parentTaskId: todo.parentTaskId,
+        tags: todo.tags,
       },
     };
   } catch (error) {
@@ -142,22 +170,34 @@ export async function handleTodoGet(
  * Handler for todo_update tool
  */
 export async function handleTodoUpdate(
-  args: { currentTask: string; newTask?: string; completed?: boolean },
+  args: {
+    currentTask: string;
+    newTask?: string;
+    completed?: boolean;
+    assignedTo?: string;
+    priority?: "high" | "medium" | "low";
+    estimatedMinutes?: number;
+    actualMinutes?: number;
+    parentTaskId?: string;
+    tags?: string[];
+  },
   db?: TodoDb,
 ): Promise<{ success: boolean; message: string }> {
   try {
     // Get the current todo to retrieve its ID and current values
     const todoDoc = await getTodoDocByName(args.currentTask, db);
-    const currentTodo = todoDoc.value;
-
-    // Use new values or fall back to current values
-    const updatedTask = args.newTask ?? currentTodo.task;
-    const updatedCompleted = args.completed ?? currentTodo.completed;
 
     await modifyTodo(todoDoc.id, {
-      task: updatedTask,
-      completed: updatedCompleted,
-    }, db);
+      task: args.newTask,
+      completed: args.completed,
+      assignedTo: args.assignedTo,
+      priority: args.priority,
+      estimatedMinutes: args.estimatedMinutes,
+      actualMinutes: args.actualMinutes,
+      parentTaskId: args.parentTaskId,
+      tags: args.tags,
+      database: db,
+    });
 
     return {
       success: true,

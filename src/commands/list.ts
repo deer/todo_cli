@@ -4,26 +4,49 @@ import { getTodos } from "../todoApi.ts";
 
 export default new Command()
   .description("List all todos")
-  .option("-l, --long", "Display full information including dates")
+  .option("-l, --long", "Display full information including dates and metadata")
+  .option("--priority <priority:string>", "Filter by priority: high, medium, or low")
+  .option("--assigned-to <assignee:string>", "Filter by assignee")
+  .option("--tag <tag:string>", "Filter by tag")
   .action(listAction);
 
-async function listAction({ long }: { long?: true | undefined }) {
-  const todos = await getTodos();
+async function listAction(options: {
+  long?: true | undefined;
+  priority?: string;
+  assignedTo?: string;
+  tag?: string;
+}) {
+  let todos = await getTodos();
+  
+  // Apply filters
+  if (options.priority) {
+    todos = todos.filter(todo => todo.value.priority === options.priority);
+  }
+  if (options.assignedTo) {
+    todos = todos.filter(todo => todo.value.assignedTo === options.assignedTo);
+  }
+  if (options.tag) {
+    todos = todos.filter(todo => 
+      todo.value.tags?.includes(options.tag!)
+    );
+  }
+  
   const headers = ["Task", "Completed"];
-  if (long) {
-    headers.push("Created At", "Updated At", "Completed At");
+  if (options.long) {
+    headers.push("Priority", "Assigned", "Est(min)", "Act(min)", "Tags", "Created At");
   }
   const table = new Table().header(headers);
   const body = todos.map((todoDoc) => {
     const todo = todoDoc.value;
-    const row = [todo.task, todo.completed ? "Yes" : "No"];
-    if (long) {
+    const row: string[] = [todo.task, todo.completed ? "Yes" : "No"];
+    if (options.long) {
       row.push(
+        todo.priority ?? "N/A",
+        todo.assignedTo ?? "N/A",
+        todo.estimatedMinutes?.toString() ?? "N/A",
+        todo.actualMinutes?.toString() ?? "N/A",
+        todo.tags?.join(", ") ?? "N/A",
         todo.createdAt ? formatTemporalOrIsoString(todo.createdAt) : "N/A",
-        todo.updatedAt ? formatTemporalOrIsoString(todo.updatedAt) : "N/A",
-        todo.completedAt ? formatTemporalOrIsoString(todo.completedAt) : "N/A",
-        todo.id,
-        todoDoc.id.toString(),
       );
     }
     return row;
