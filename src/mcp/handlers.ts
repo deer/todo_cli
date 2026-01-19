@@ -170,7 +170,7 @@ export async function handleTodoDelete(
       : `${args.tasks.length} task(s)`;
     return {
       success: true,
-      message: `Deletion completed for ${taskList}`,
+      message: `Todo(s) deleted: ${taskList}`,
     };
   } catch (error) {
     return {
