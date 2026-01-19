@@ -43,8 +43,5 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-deno-
 
-      - name: Install dependencies (pre-cache)
-        run: |
-          # This will download and cache all dependencies
-          deno cache todo.ts --frozen
-          deno cache src/todoApi.ts --frozen
+      - name: Install dependencies with frozen lockfile
+        run: deno install --frozen

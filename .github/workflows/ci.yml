@@ -22,6 +22,9 @@ jobs:
         with:
           deno-version: v2.x
 
+      - name: Install dependencies with frozen lockfile
+        run: deno install --frozen
+
       - name: Verify formatting
         run: deno fmt --check
 
@@ -29,7 +32,7 @@ jobs:
         run: deno lint
 
       - name: Check types
-        run: deno check --frozen
+        run: deno check
 
       - name: Run tests
-        run: deno task test --frozen
+        run: deno task test
