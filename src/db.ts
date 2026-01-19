@@ -10,6 +10,12 @@ import { z } from "zod";
  * @property createdAt - ISO 8601 timestamp when the todo was created
  * @property updatedAt - ISO 8601 timestamp when the todo was last updated
  * @property completedAt - ISO 8601 timestamp when the todo was marked complete
+ * @property assignedTo - Optional assignee identifier for agent coordination
+ * @property priority - Optional priority level: high, medium, or low
+ * @property estimatedMinutes - Optional estimated time to complete in minutes
+ * @property actualMinutes - Optional actual time spent in minutes
+ * @property parentTaskId - Optional parent task ID for hierarchical task breakdown
+ * @property tags - Optional array of tags for categorization
  */
 export const TodoSchema = z.object({
   id: z.string(),
@@ -18,6 +24,12 @@ export const TodoSchema = z.object({
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
   completedAt: z.string().optional(),
+  assignedTo: z.string().optional(),
+  priority: z.enum(["high", "medium", "low"]).optional(),
+  estimatedMinutes: z.number().optional(),
+  actualMinutes: z.number().optional(),
+  parentTaskId: z.string().optional(),
+  tags: z.array(z.string()).optional(),
 });
 
 /**

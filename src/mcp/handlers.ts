@@ -24,7 +24,7 @@ export async function handleTodoAdd(
   db?: TodoDb,
 ): Promise<{ success: boolean; message: string }> {
   try {
-    await addTodo(args.task, db);
+    await addTodo(args.task, { database: db });
     return {
       success: true,
       message: `Todo added: "${args.task}"`,
@@ -52,6 +52,12 @@ export async function handleTodoList(
     createdAt?: string;
     updatedAt?: string;
     completedAt?: string;
+    assignedTo?: string;
+    priority?: "high" | "medium" | "low";
+    estimatedMinutes?: number;
+    actualMinutes?: number;
+    parentTaskId?: string;
+    tags?: string[];
   }>;
   message?: string;
 }> {
@@ -73,6 +79,12 @@ export async function handleTodoList(
       createdAt: todo.value.createdAt,
       updatedAt: todo.value.updatedAt,
       completedAt: todo.value.completedAt,
+      assignedTo: todo.value.assignedTo,
+      priority: todo.value.priority,
+      estimatedMinutes: todo.value.estimatedMinutes,
+      actualMinutes: todo.value.actualMinutes,
+      parentTaskId: todo.value.parentTaskId,
+      tags: todo.value.tags,
     }));
 
     return {
@@ -142,7 +154,10 @@ export async function handleTodoUpdate(
     const updatedTask = args.newTask ?? currentTodo.task;
     const updatedCompleted = args.completed ?? currentTodo.completed;
 
-    await modifyTodo(todoDoc.id, updatedTask, updatedCompleted, db);
+    await modifyTodo(todoDoc.id, {
+      task: updatedTask,
+      completed: updatedCompleted,
+    }, db);
 
     return {
       success: true,
