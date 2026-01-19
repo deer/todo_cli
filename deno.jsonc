@@ -23,6 +23,7 @@
     "coverage:lcov": "rm -rf coverage && deno task test --coverage=coverage && deno coverage coverage --lcov --output=coverage.lcov",
     "dev": "deno run -A --unstable-kv --unstable-temporal todo.ts",
     "install": "deno install -g --allow-net=cdn.deno.land,api.github.com --allow-env=TODO_CLI_KV_STORE_PATH --allow-run --unstable-kv --unstable-temporal --config deno.jsonc todo.ts -f",
+    "mcp": "deno run --allow-read --allow-write --allow-env --unstable-kv --unstable-temporal src/mcp/server.ts",
     "ok": "deno fmt --check && deno lint && deno check && deno task test",
     "test": "deno test -A --unstable-kv --unstable-temporal --parallel --no-check",
     "version:increase": "deno run --allow-read=src/versions.json --allow-write=src/versions.json src/utils/increase_version.ts",
