@@ -1,6 +1,6 @@
 /**
  * MCP Tool Handlers for Todo CLI
- * 
+ *
  * This module implements the execution handlers for each MCP tool,
  * wrapping the existing todoApi.ts functions without duplicating business logic.
  */
@@ -165,9 +165,12 @@ export async function handleTodoDelete(
 ): Promise<{ success: boolean; message: string }> {
   try {
     await deleteTodosByName(args.tasks, db);
+    const taskList = args.tasks.length === 1
+      ? `"${args.tasks[0]}"`
+      : `${args.tasks.length} task(s)`;
     return {
       success: true,
-      message: `Deleted ${args.tasks.length} todo(s)`,
+      message: `Deletion completed for ${taskList}`,
     };
   } catch (error) {
     return {

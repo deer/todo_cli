@@ -1,6 +1,6 @@
 /**
  * MCP Tool Definitions for Todo CLI
- * 
+ *
  * This module defines the 6 core MCP tools that expose todo operations
  * to agents and other MCP clients.
  */
@@ -73,11 +73,13 @@ export const tools: McpTool[] = [
         },
         newTask: {
           type: "string",
-          description: "The new task description (optional if only updating completion)",
+          description:
+            "The new task description (optional if only updating completion)",
         },
         completed: {
           type: "boolean",
-          description: "The new completion status (optional if only updating task)",
+          description:
+            "The new completion status (optional if only updating task)",
         },
       },
       required: ["currentTask"],

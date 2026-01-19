@@ -1,11 +1,11 @@
 #!/usr/bin/env -S deno run --allow-read --allow-write --allow-env --unstable-kv --unstable-temporal
 /**
  * MCP Server for Todo CLI
- * 
+ *
  * This is the main entry point for the MCP (Model Context Protocol) server.
  * It exposes todo operations as MCP tools that can be called by agents and
  * other MCP clients like Claude Desktop.
- * 
+ *
  * The server implements the MCP protocol over stdio using JSON-RPC 2.0.
  */
 
@@ -185,7 +185,11 @@ class McpServer {
 
         case "todo_update":
           result = await handleTodoUpdate(
-            args as { currentTask: string; newTask?: string; completed?: boolean },
+            args as {
+              currentTask: string;
+              newTask?: string;
+              completed?: boolean;
+            },
           );
           break;
 
