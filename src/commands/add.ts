@@ -5,11 +5,23 @@ import { addTodo } from "../todoApi.ts";
 export default new Command()
   .description("Add a new todo")
   .arguments("[task:string]")
-  .option("--assigned-to <assignee:string>", "Assign todo to an agent or person")
-  .option("--priority <priority:string>", "Priority level: high, medium, or low")
-  .option("--estimated <minutes:number>", "Estimated time to complete in minutes")
+  .option(
+    "--assigned-to <assignee:string>",
+    "Assign todo to an agent or person",
+  )
+  .option(
+    "--priority <priority:string>",
+    "Priority level: high, medium, or low",
+  )
+  .option(
+    "--estimated <minutes:number>",
+    "Estimated time to complete in minutes",
+  )
   .option("--actual <minutes:number>", "Actual time spent in minutes")
-  .option("--parent <taskId:string>", "Parent task ID for hierarchical breakdown")
+  .option(
+    "--parent <taskId:string>",
+    "Parent task ID for hierarchical breakdown",
+  )
   .option("--tags <tags:string>", "Comma-separated tags for categorization")
   .action(addAction);
 
@@ -29,13 +41,17 @@ async function addAction(
   }
   if (task) {
     // Validate priority if provided
-    if (options.priority && !["high", "medium", "low"].includes(options.priority)) {
+    if (
+      options.priority && !["high", "medium", "low"].includes(options.priority)
+    ) {
       console.log("Error: Priority must be one of: high, medium, low");
       return;
     }
 
     // Parse tags from comma-separated string
-    const tags = options.tags ? options.tags.split(",").map(t => t.trim()) : undefined;
+    const tags = options.tags
+      ? options.tags.split(",").map((t) => t.trim())
+      : undefined;
 
     await addTodo(task, {
       assignedTo: options.assignedTo,

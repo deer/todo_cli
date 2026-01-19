@@ -5,7 +5,10 @@ import { getTodos } from "../todoApi.ts";
 export default new Command()
   .description("List all todos")
   .option("-l, --long", "Display full information including dates and metadata")
-  .option("--priority <priority:string>", "Filter by priority: high, medium, or low")
+  .option(
+    "--priority <priority:string>",
+    "Filter by priority: high, medium, or low",
+  )
   .option("--assigned-to <assignee:string>", "Filter by assignee")
   .option("--tag <tag:string>", "Filter by tag")
   .action(listAction);
@@ -17,23 +20,30 @@ async function listAction(options: {
   tag?: string;
 }) {
   let todos = await getTodos();
-  
+
   // Apply filters
   if (options.priority) {
-    todos = todos.filter(todo => todo.value.priority === options.priority);
+    todos = todos.filter((todo) => todo.value.priority === options.priority);
   }
   if (options.assignedTo) {
-    todos = todos.filter(todo => todo.value.assignedTo === options.assignedTo);
-  }
-  if (options.tag) {
-    todos = todos.filter(todo => 
-      todo.value.tags?.includes(options.tag!)
+    todos = todos.filter((todo) =>
+      todo.value.assignedTo === options.assignedTo
     );
   }
-  
+  if (options.tag) {
+    todos = todos.filter((todo) => todo.value.tags?.includes(options.tag!));
+  }
+
   const headers = ["Task", "Completed"];
   if (options.long) {
-    headers.push("Priority", "Assigned", "Est(min)", "Act(min)", "Tags", "Created At");
+    headers.push(
+      "Priority",
+      "Assigned",
+      "Est(min)",
+      "Act(min)",
+      "Tags",
+      "Created At",
+    );
   }
   const table = new Table().header(headers);
   const body = todos.map((todoDoc) => {

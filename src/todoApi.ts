@@ -12,7 +12,7 @@ import { createDb, db, type Todo, type TodoDb, TodoSchema } from "./db.ts";
  * ```ts
  * // Simple usage
  * await addTodo("Buy groceries");
- * 
+ *
  * // With metadata
  * await addTodo("Implement auth", {
  *   priority: "high",
@@ -35,17 +35,21 @@ export async function addTodo(
   },
 ): Promise<void> {
   const targetDb = options?.database ?? db;
-  
+
   const newTodo = {
     id: crypto.randomUUID(),
     task,
     createdAt: Temporal.Now.instant().toString(),
     completed: false,
-    ...(options?.assignedTo !== undefined && { assignedTo: options.assignedTo }),
+    ...(options?.assignedTo !== undefined &&
+      { assignedTo: options.assignedTo }),
     ...(options?.priority !== undefined && { priority: options.priority }),
-    ...(options?.estimatedMinutes !== undefined && { estimatedMinutes: options.estimatedMinutes }),
-    ...(options?.actualMinutes !== undefined && { actualMinutes: options.actualMinutes }),
-    ...(options?.parentTaskId !== undefined && { parentTaskId: options.parentTaskId }),
+    ...(options?.estimatedMinutes !== undefined &&
+      { estimatedMinutes: options.estimatedMinutes }),
+    ...(options?.actualMinutes !== undefined &&
+      { actualMinutes: options.actualMinutes }),
+    ...(options?.parentTaskId !== undefined &&
+      { parentTaskId: options.parentTaskId }),
     ...(options?.tags !== undefined && { tags: options.tags }),
   };
   const validatedTodo = TodoSchema.parse(newTodo);
@@ -100,15 +104,15 @@ export async function modifyTodo(
   },
 ): Promise<void> {
   const targetDb = updates.database ?? db;
-  
+
   const todoUpdate: Partial<Todo> = {
     updatedAt: Temporal.Now.instant().toString(),
   };
-  
+
   if (updates.task !== undefined) {
     todoUpdate.task = updates.task;
   }
-  
+
   if (updates.completed !== undefined) {
     todoUpdate.completed = updates.completed;
     if (updates.completed) {
@@ -117,31 +121,31 @@ export async function modifyTodo(
       todoUpdate.completedAt = undefined;
     }
   }
-  
+
   if (updates.assignedTo !== undefined) {
     todoUpdate.assignedTo = updates.assignedTo;
   }
-  
+
   if (updates.priority !== undefined) {
     todoUpdate.priority = updates.priority;
   }
-  
+
   if (updates.estimatedMinutes !== undefined) {
     todoUpdate.estimatedMinutes = updates.estimatedMinutes;
   }
-  
+
   if (updates.actualMinutes !== undefined) {
     todoUpdate.actualMinutes = updates.actualMinutes;
   }
-  
+
   if (updates.parentTaskId !== undefined) {
     todoUpdate.parentTaskId = updates.parentTaskId;
   }
-  
+
   if (updates.tags !== undefined) {
     todoUpdate.tags = updates.tags;
   }
-  
+
   const result = await targetDb.todos.update(id, todoUpdate, {
     strategy: "merge",
   });

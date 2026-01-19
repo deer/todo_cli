@@ -178,11 +178,12 @@ Deno.test("todoApi - modifyTodo throws error for invalid ID", async () => {
   const { tmpDir, db, close } = await setupApiTestEnv();
   try {
     await assertRejects(
-      async () => await modifyTodo("invalid-id", {
-        task: "New task",
-        completed: false,
-        database: db,
-      }),
+      async () =>
+        await modifyTodo("invalid-id", {
+          task: "New task",
+          completed: false,
+          database: db,
+        }),
       Error,
       "Failed to update todo with ID invalid-id",
     );

@@ -21,7 +21,8 @@ export interface McpTool {
 export const tools: McpTool[] = [
   {
     name: "todo_add",
-    description: "Add a new todo with a task description and optional metadata for agent coordination",
+    description:
+      "Add a new todo with a task description and optional metadata for agent coordination",
     inputSchema: {
       type: "object",
       properties: {
@@ -91,7 +92,8 @@ export const tools: McpTool[] = [
   },
   {
     name: "todo_update",
-    description: "Update a todo's task description, completion status, or metadata",
+    description:
+      "Update a todo's task description, completion status, or metadata",
     inputSchema: {
       type: "object",
       properties: {
@@ -101,13 +103,11 @@ export const tools: McpTool[] = [
         },
         newTask: {
           type: "string",
-          description:
-            "The new task description (optional)",
+          description: "The new task description (optional)",
         },
         completed: {
           type: "boolean",
-          description:
-            "The new completion status (optional)",
+          description: "The new completion status (optional)",
         },
         assignedTo: {
           type: "string",
