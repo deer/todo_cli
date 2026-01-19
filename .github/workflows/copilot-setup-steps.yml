@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup Deno
         uses: denoland/setup-deno@v2
@@ -43,13 +43,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-deno-
 
-      - name: Check Deno configuration
-        run: |
-          echo "Deno configuration loaded from deno.jsonc"
-          deno task --help || echo "Tasks available in deno.jsonc"
-
       - name: Install dependencies (pre-cache)
         run: |
           # This will download and cache all dependencies
-          deno cache todo.ts
-          deno cache src/todoApi.ts
+          deno cache todo.ts --frozen
+          deno cache src/todoApi.ts --frozen

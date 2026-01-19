@@ -18,7 +18,6 @@ The `.github/workflows/copilot-setup-steps.yml` workflow automatically:
 - Installs Deno 2.x
 - Caches dependencies
 - Verifies the environment is ready
-- Runs initial quality checks and tests
 
 ### Key Points
 
