@@ -13,14 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           token: ${{ secrets.RELEASE_PAT }}
 
       - name: Setup Deno
-        uses: denoland/setup-deno@v1
+        uses: denoland/setup-deno@v2
         with:
-          deno-version: "1.x"
+          deno-version: v2.x
 
       - name: Increase Version
         run: deno task version:increase ${{ github.event.inputs.releaseType }}
