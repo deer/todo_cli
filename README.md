@@ -84,7 +84,9 @@ todo upgrade
 
 ## MCP Server Integration
 
-The Todo CLI includes an MCP (Model Context Protocol) server that enables agents and AI assistants to manage todos programmatically. This makes it perfect for integration with Claude Desktop, agent frameworks, and other MCP clients.
+The Todo CLI includes an MCP (Model Context Protocol) server that enables agents
+and AI assistants to manage todos programmatically. This makes it perfect for
+integration with Claude Desktop, agent frameworks, and other MCP clients.
 
 ### Starting the MCP Server
 
@@ -92,19 +94,23 @@ The Todo CLI includes an MCP (Model Context Protocol) server that enables agents
 deno task mcp
 ```
 
-The server listens for JSON-RPC 2.0 requests on stdin and responds on stdout, following the MCP specification.
+The server listens for JSON-RPC 2.0 requests on stdin and responds on stdout,
+following the MCP specification.
 
 ### Available MCP Tools
 
 The MCP server exposes 6 tools for todo management:
 
 #### 1. `todo_add`
+
 Add a new todo with a task description.
 
 **Parameters:**
+
 - `task` (string, required): The task description
 
 **Example:**
+
 ```json
 {
   "name": "todo_add",
@@ -115,15 +121,18 @@ Add a new todo with a task description.
 ```
 
 #### 2. `todo_list`
+
 List all todos, optionally filtered by completion status.
 
 **Parameters:**
+
 - `completed` (boolean, optional): Filter by completion status
   - `true`: Show only completed todos
   - `false`: Show only incomplete todos
   - Omit: Show all todos
 
 **Example:**
+
 ```json
 {
   "name": "todo_list",
@@ -134,12 +143,15 @@ List all todos, optionally filtered by completion status.
 ```
 
 #### 3. `todo_get`
+
 Get a specific todo by task name.
 
 **Parameters:**
+
 - `task` (string, required): The task name to search for
 
 **Example:**
+
 ```json
 {
   "name": "todo_get",
@@ -150,14 +162,17 @@ Get a specific todo by task name.
 ```
 
 #### 4. `todo_update`
+
 Update a todo's task description or completion status.
 
 **Parameters:**
+
 - `currentTask` (string, required): The current task name to identify the todo
 - `newTask` (string, optional): The new task description
 - `completed` (boolean, optional): The new completion status
 
 **Example:**
+
 ```json
 {
   "name": "todo_update",
@@ -170,12 +185,15 @@ Update a todo's task description or completion status.
 ```
 
 #### 5. `todo_delete`
+
 Delete one or more todos by task name.
 
 **Parameters:**
+
 - `tasks` (array of strings, required): Array of task names to delete
 
 **Example:**
+
 ```json
 {
   "name": "todo_delete",
@@ -186,12 +204,15 @@ Delete one or more todos by task name.
 ```
 
 #### 6. `todo_complete`
+
 Mark a todo as completed by task name.
 
 **Parameters:**
+
 - `task` (string, required): The task name to mark as completed
 
 **Example:**
+
 ```json
 {
   "name": "todo_complete",
@@ -203,7 +224,8 @@ Mark a todo as completed by task name.
 
 ### Using with Claude Desktop
 
-To integrate with Claude Desktop, add the following to your `claude_desktop_config.json`:
+To integrate with Claude Desktop, add the following to your
+`claude_desktop_config.json`:
 
 ```json
 {
@@ -220,16 +242,19 @@ To integrate with Claude Desktop, add the following to your `claude_desktop_conf
 }
 ```
 
-After configuration, Claude Desktop will be able to manage your todos using natural language commands.
+After configuration, Claude Desktop will be able to manage your todos using
+natural language commands.
 
 ### MCP Protocol Details
 
 The server implements the Model Context Protocol over stdio using JSON-RPC 2.0:
+
 - **Protocol Version**: 2024-11-05
 - **Capabilities**: Tools
 - **Transport**: stdio (standard input/output)
 
-All requests and responses follow the JSON-RPC 2.0 specification with proper error handling.
+All requests and responses follow the JSON-RPC 2.0 specification with proper
+error handling.
 
 ## Development
 

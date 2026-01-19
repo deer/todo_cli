@@ -142,7 +142,7 @@ export async function handleTodoUpdate(
     const updatedTask = args.newTask ?? currentTodo.task;
     const updatedCompleted = args.completed ?? currentTodo.completed;
 
-    await modifyTodo(currentTodo.id, updatedTask, updatedCompleted, db);
+    await modifyTodo(todoDoc.id, updatedTask, updatedCompleted, db);
 
     return {
       success: true,
