@@ -211,7 +211,7 @@ Deno.test("MCP Handler - todo_delete removes multiple todos", async () => {
       tasks: ["Delete 1", "Delete 2"],
     }, db);
     assertEquals(deleteResult.success, true);
-    assertEquals(deleteResult.message, "Deletion completed for 2 task(s)");
+    assertEquals(deleteResult.message, "Todo(s) deleted: 2 task(s)");
 
     const listResult = await handleTodoList({}, db);
     assertEquals(listResult.todos?.length, 1);
