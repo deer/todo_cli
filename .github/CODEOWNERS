@@ -1,0 +1,5 @@
+# Code Owners for Todo CLI
+# These owners will be automatically requested for review when someone opens a pull request
+
+# Default owner for everything in the repo
+* @deer
