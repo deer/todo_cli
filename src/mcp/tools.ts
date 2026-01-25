@@ -21,13 +21,42 @@ export interface McpTool {
 export const tools: McpTool[] = [
   {
     name: "todo_add",
-    description: "Add a new todo with a task description",
+    description:
+      "Add a new todo with a task description and optional metadata for agent coordination",
     inputSchema: {
       type: "object",
       properties: {
         task: {
           type: "string",
           description: "The task description for the todo",
+        },
+        assignedTo: {
+          type: "string",
+          description: "Assignee identifier for agent coordination",
+        },
+        priority: {
+          type: "string",
+          enum: ["high", "medium", "low"],
+          description: "Priority level: high, medium, or low",
+        },
+        estimatedMinutes: {
+          type: "number",
+          description: "Estimated time to complete in minutes",
+        },
+        actualMinutes: {
+          type: "number",
+          description: "Actual time spent in minutes",
+        },
+        parentTaskId: {
+          type: "string",
+          description: "Parent task ID for hierarchical task breakdown",
+        },
+        tags: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          description: "Array of tags for categorization",
         },
       },
       required: ["task"],
@@ -63,7 +92,8 @@ export const tools: McpTool[] = [
   },
   {
     name: "todo_update",
-    description: "Update a todo's task description or completion status",
+    description:
+      "Update a todo's task description, completion status, or metadata",
     inputSchema: {
       type: "object",
       properties: {
@@ -73,13 +103,39 @@ export const tools: McpTool[] = [
         },
         newTask: {
           type: "string",
-          description:
-            "The new task description (optional if only updating completion)",
+          description: "The new task description (optional)",
         },
         completed: {
           type: "boolean",
-          description:
-            "The new completion status (optional if only updating task)",
+          description: "The new completion status (optional)",
+        },
+        assignedTo: {
+          type: "string",
+          description: "Assignee identifier (optional)",
+        },
+        priority: {
+          type: "string",
+          enum: ["high", "medium", "low"],
+          description: "Priority level: high, medium, or low (optional)",
+        },
+        estimatedMinutes: {
+          type: "number",
+          description: "Estimated time to complete in minutes (optional)",
+        },
+        actualMinutes: {
+          type: "number",
+          description: "Actual time spent in minutes (optional)",
+        },
+        parentTaskId: {
+          type: "string",
+          description: "Parent task ID (optional)",
+        },
+        tags: {
+          type: "array",
+          items: {
+            type: "string",
+          },
+          description: "Array of tags (optional)",
         },
       },
       required: ["currentTask"],

@@ -5,25 +5,60 @@ import { createDb, db, type Todo, type TodoDb, TodoSchema } from "./db.ts";
  * Adds a new todo to the database.
  *
  * @param task - The task description for the todo
- * @param database - Optional database instance. If not provided, uses the default database
+ * @param options - Optional metadata for agent coordination
  * @returns A promise that resolves when the todo is added
  *
  * @example
  * ```ts
+ * // Simple usage
  * await addTodo("Buy groceries");
+ *
+ * // With metadata
+ * await addTodo("Implement auth", {
+ *   priority: "high",
+ *   estimatedMinutes: 60,
+ *   assignedTo: "agent-1",
+ *   tags: ["feature", "security"]
+ * });
  * ```
  */
 export async function addTodo(
   task: string,
-  database?: TodoDb,
+  options?: {
+    assignedTo?: string;
+    priority?: "high" | "medium" | "low";
+    estimatedMinutes?: number;
+    actualMinutes?: number;
+    parentTaskId?: string;
+    tags?: string[];
+    database?: TodoDb;
+  },
 ): Promise<void> {
-  const targetDb = database ?? db;
-  const newTodo = {
+  const targetDb = options?.database ?? db;
+
+  const newTodo: Record<string, unknown> = {
     id: crypto.randomUUID(),
     task,
     createdAt: Temporal.Now.instant().toString(),
     completed: false,
   };
+
+  // Add optional metadata fields if provided
+  if (options?.assignedTo !== undefined) {
+    newTodo.assignedTo = options.assignedTo;
+  }
+  if (options?.priority !== undefined) newTodo.priority = options.priority;
+  if (options?.estimatedMinutes !== undefined) {
+    newTodo.estimatedMinutes = options.estimatedMinutes;
+  }
+  if (options?.actualMinutes !== undefined) {
+    newTodo.actualMinutes = options.actualMinutes;
+  }
+  if (options?.parentTaskId !== undefined) {
+    newTodo.parentTaskId = options.parentTaskId;
+  }
+  if (options?.tags !== undefined) newTodo.tags = options.tags;
+
   const validatedTodo = TodoSchema.parse(newTodo);
   await targetDb.todos.add(validatedTodo);
 }
@@ -52,33 +87,72 @@ export async function getTodos(
  * Updates an existing todo by ID.
  *
  * @param id - The unique identifier of the todo to update
- * @param task - The new task description
- * @param completed - Whether the todo is completed
- * @param database - Optional database instance. If not provided, uses the default database
+ * @param updates - Updates to apply to the todo
  * @throws {Error} If the todo with the given ID is not found
  *
  * @example
  * ```ts
- * await modifyTodo("abc-123", "Buy groceries and cook dinner", true);
+ * await modifyTodo("abc-123", { task: "Buy groceries", completed: true });
+ * await modifyTodo("abc-123", { priority: "high", estimatedMinutes: 120 });
  * ```
  */
 export async function modifyTodo(
   id: string,
-  task: string,
-  completed: boolean,
-  database?: TodoDb,
+  updates: {
+    task?: string;
+    completed?: boolean;
+    assignedTo?: string;
+    priority?: "high" | "medium" | "low";
+    estimatedMinutes?: number;
+    actualMinutes?: number;
+    parentTaskId?: string;
+    tags?: string[];
+    database?: TodoDb;
+  },
 ): Promise<void> {
-  const targetDb = database ?? db;
+  const targetDb = updates.database ?? db;
+
   const todoUpdate: Partial<Todo> = {
-    task,
-    completed,
     updatedAt: Temporal.Now.instant().toString(),
   };
-  if (completed) {
-    todoUpdate.completedAt = Temporal.Now.instant().toString();
-  } else {
-    todoUpdate.completedAt = undefined;
+
+  if (updates.task !== undefined) {
+    todoUpdate.task = updates.task;
   }
+
+  if (updates.completed !== undefined) {
+    todoUpdate.completed = updates.completed;
+    if (updates.completed) {
+      todoUpdate.completedAt = Temporal.Now.instant().toString();
+    } else {
+      todoUpdate.completedAt = undefined;
+    }
+  }
+
+  if (updates.assignedTo !== undefined) {
+    todoUpdate.assignedTo = updates.assignedTo;
+  }
+
+  if (updates.priority !== undefined) {
+    todoUpdate.priority = updates.priority;
+  }
+
+  if (updates.estimatedMinutes !== undefined) {
+    todoUpdate.estimatedMinutes = updates.estimatedMinutes;
+  }
+
+  if (updates.actualMinutes !== undefined) {
+    todoUpdate.actualMinutes = updates.actualMinutes;
+  }
+
+  if (updates.parentTaskId !== undefined) {
+    todoUpdate.parentTaskId = updates.parentTaskId;
+  }
+
+  if (updates.tags !== undefined) {
+    todoUpdate.tags = updates.tags;
+  }
+
   const result = await targetDb.todos.update(id, todoUpdate, {
     strategy: "merge",
   });

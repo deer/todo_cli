@@ -60,7 +60,8 @@ Deno.test("list command - long format includes dates", async () => {
     const cleaned = stripAnsiCode(output);
     assertStringIncludes(cleaned, "Test todo");
     assertStringIncludes(cleaned, "Created At");
-    assertStringIncludes(cleaned, "Updated At");
+    assertStringIncludes(cleaned, "Priority");
+    assertStringIncludes(cleaned, "Assigned");
   } finally {
     await cleanupCliTestEnv(tmpDir);
   }
