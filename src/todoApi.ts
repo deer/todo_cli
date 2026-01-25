@@ -42,15 +42,23 @@ export async function addTodo(
     createdAt: Temporal.Now.instant().toString(),
     completed: false,
   };
-  
+
   // Add optional metadata fields if provided
-  if (options?.assignedTo !== undefined) newTodo.assignedTo = options.assignedTo;
+  if (options?.assignedTo !== undefined) {
+    newTodo.assignedTo = options.assignedTo;
+  }
   if (options?.priority !== undefined) newTodo.priority = options.priority;
-  if (options?.estimatedMinutes !== undefined) newTodo.estimatedMinutes = options.estimatedMinutes;
-  if (options?.actualMinutes !== undefined) newTodo.actualMinutes = options.actualMinutes;
-  if (options?.parentTaskId !== undefined) newTodo.parentTaskId = options.parentTaskId;
+  if (options?.estimatedMinutes !== undefined) {
+    newTodo.estimatedMinutes = options.estimatedMinutes;
+  }
+  if (options?.actualMinutes !== undefined) {
+    newTodo.actualMinutes = options.actualMinutes;
+  }
+  if (options?.parentTaskId !== undefined) {
+    newTodo.parentTaskId = options.parentTaskId;
+  }
   if (options?.tags !== undefined) newTodo.tags = options.tags;
-  
+
   const validatedTodo = TodoSchema.parse(newTodo);
   await targetDb.todos.add(validatedTodo);
 }

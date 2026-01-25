@@ -31,7 +31,9 @@ async function listAction(options: {
     );
   }
   if (options.tag) {
-    todos = todos.filter((todo) => todo.value.tags?.includes(options.tag));
+    todos = todos.filter((todo) =>
+      todo.value.tags?.includes(options.tag || "")
+    );
   }
 
   const headers = ["Task", "Completed"];
